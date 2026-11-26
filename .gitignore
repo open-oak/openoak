@@ -1,0 +1,14 @@
+.env
+.env.*
+!.env.example
+.next/
+node_modules/
+generated/
+dist/
+out/
+build/
+coverage/
+*.tsbuildinfo
+.vercel/
+.DS_Store
+npm-debug.log*

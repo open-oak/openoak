@@ -1,0 +1,57 @@
+{
+  "name": "open-oak",
+  "version": "0.1.0",
+  "private": true,
+  "license": "AGPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/open-oak/openoak.git"
+  },
+  "packageManager": "npm@10.9.7",
+  "engines": {
+    "node": "^22.18.0"
+  },
+  "workspaces": [
+    "apps/*",
+    "websites/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "generate": "npm run generate --workspaces --if-present",
+    "generate:pwa": "node scripts/generate-pwa.mjs",
+    "generate:pwa:icons": "node scripts/generate-pwa-icons.mjs && node scripts/generate-pwa.mjs",
+    "test:pwa": "node --test scripts/pwa.test.mjs",
+    "test:pwa:apps": "node --test scripts/pwa-apps.test.mjs",
+    "check:sites": "node scripts/check-product-site-parity.mjs",
+    "check:security": "node scripts/check-security-baseline.mjs",
+    "lint": "npm run lint --workspaces --if-present -- --max-warnings=0",
+    "test": "node --test scripts/suite-config.test.mjs scripts/auth-secret.test.mjs scripts/redirect-handlers.test.mjs scripts/kanban-modular-contract.test.mjs scripts/pwa.test.mjs && npm run test --workspaces --if-present",
+    "test:kanban-contract": "node --test scripts/kanban-modular-contract.test.mjs",
+    "test:a11y": "node --test scripts/a11y.test.mjs",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "dev:account": "npm run dev --workspace=@openoak/account",
+    "dev:todo": "npm run dev --workspace=@openoak/todo",
+    "dev:kanban": "npm run dev --workspace=@openoak/kanban",
+    "dev:outline": "npm run dev --workspace=@openoak/outline",
+    "test:recovery": "node --import tsx scripts/test-data-recovery.mjs",
+    "privacy:install-links": "node --import tsx scripts/install-suite-account-links.mjs",
+    "privacy:delete": "node --import tsx scripts/delete-suite-account.mjs"
+  },
+  "overrides": {
+    "deepmerge-ts": "8.0.0",
+    "effect": "3.22.1",
+    "fast-uri": "3.1.9",
+    "mysql2": "3.24.6",
+    "nanoid": "3.3.18",
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "11.0.1"
+    }
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "mysql2": "3.24.6",
+    "playwright": "1.62.1",
+    "pg": "^8.16.3",
+    "tsx": "^4.20.6"
+  }
+}

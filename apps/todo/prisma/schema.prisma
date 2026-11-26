@@ -1,0 +1,197 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  image         String?
+  emailVerified Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  ipAddress String?
+  userAgent String?
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Verification {
+  id         String    @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+}
+
+// Todo-owned data. Auth (User/Session/Account/Verification) lives in the
+// central account database. TodoProfile is keyed by the
+// central user id; it holds only Todo-specific settings.
+model TodoProfile {
+  id                 String              @id // central user id, set explicitly on first visit
+  displayName        String?
+  email              String?
+  themeColor         String?
+  myDayTheme         String?
+  importantTheme     String?
+  plannedTheme       String?
+  tasksTheme         String?
+  myDayBg            String?
+  importantBg        String?
+  plannedBg          String?
+  tasksBg            String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  ownedLists         List[]              @relation("OwnedLists")
+  createdTasks       Task[]              @relation("CreatedTasks")
+  listMemberships    ListMember[]
+  taskPersonalStates TaskPersonalState[]
+  trashedTasks       TaskTrash[]
+}
+
+enum ListKind {
+  DEFAULT
+  CUSTOM
+}
+
+model List {
+  id              String       @id @default(cuid())
+  name            String
+  themeColor      String?
+  backgroundImage String?
+  ownerId         String
+  kind            ListKind     @default(CUSTOM)
+  inviteEnabled   Boolean      @default(false)
+  inviteNonce     String?      @unique
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  sortOrder       Int          @default(0)
+  owner           TodoProfile  @relation("OwnedLists", fields: [ownerId], references: [id], onDelete: Cascade)
+  tasks           Task[]
+  members         ListMember[]
+  trash           TaskTrash[]
+
+  @@index([ownerId, sortOrder, createdAt])
+  @@index([ownerId, name])
+  @@index([ownerId, kind])
+}
+
+model ListMember {
+  id        String      @id @default(cuid())
+  listId    String
+  userId    String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  list      List        @relation(fields: [listId], references: [id], onDelete: Cascade)
+  user      TodoProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([listId, userId])
+  @@index([userId, createdAt])
+  @@index([listId, createdAt])
+}
+
+model Task {
+  id             String              @id @default(cuid())
+  title          String
+  notes          String?
+  dueDate        DateTime?
+  isCompleted    Boolean             @default(false)
+  isImportant    Boolean             @default(false)
+  isMyDay        Boolean             @default(false)
+  sortOrder      Int                 @default(0)
+  listId         String
+  createdById    String              @map("userId")
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  subtasks       Subtask[]
+  personalStates TaskPersonalState[]
+  list           List                @relation(fields: [listId], references: [id], onDelete: Cascade)
+  createdBy      TodoProfile         @relation("CreatedTasks", fields: [createdById], references: [id], onDelete: Cascade)
+
+  @@index([createdById, isMyDay, isCompleted])
+  @@index([createdById, isImportant, isCompleted])
+  @@index([createdById, dueDate, isCompleted])
+  @@index([createdById, listId, isCompleted])
+  @@index([createdById, listId, sortOrder, createdAt])
+}
+
+model TaskPersonalState {
+  taskId      String
+  userId      String
+  isImportant Boolean     @default(false)
+  isMyDay     Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  task        Task        @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user        TodoProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([taskId, userId])
+  @@index([userId, isMyDay, taskId])
+  @@index([userId, isImportant, taskId])
+}
+
+model Subtask {
+  id          String   @id @default(cuid())
+  title       String
+  isCompleted Boolean  @default(false)
+  taskId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  sortOrder   Int      @default(0)
+  task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([taskId, sortOrder, createdAt])
+  @@index([title])
+}
+
+model TaskTrash {
+  id          String      @id @default(cuid())
+  taskId      String      @unique
+  listId      String
+  createdById String
+  title       String
+  snapshot    Json
+  deletedAt   DateTime    @default(now())
+  list        List        @relation(fields: [listId], references: [id], onDelete: Cascade)
+  creator     TodoProfile @relation(fields: [createdById], references: [id], onDelete: Cascade)
+
+  @@index([listId, deletedAt, id])
+}

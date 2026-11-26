@@ -1,0 +1,19 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "org.openoak/openoak",
+  "title": "OpenOak",
+  "description": "Secure AI access to OpenOak tasks, notes, and Kanban boards.",
+  "version": "0.1.0",
+  "websiteUrl": "https://openoak.org/mcp/",
+  "repository": {
+    "url": "https://github.com/open-oak/openoak",
+    "source": "github",
+    "subfolder": "apps/mcp"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.openoak.org"
+    }
+  ]
+}

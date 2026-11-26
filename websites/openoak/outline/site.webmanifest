@@ -1,0 +1,23 @@
+{
+  "name": "OpenOutline",
+  "short_name": "OpenOutline",
+  "description": "A structured, open-source notes app for outlines, drafts, and reference material.",
+  "start_url": "/outline/",
+  "display": "standalone",
+  "background_color": "#0b1413",
+  "theme_color": "#0f3d39",
+  "icons": [
+    {
+      "src": "/outline/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/outline/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

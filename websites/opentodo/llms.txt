@@ -1,0 +1,18 @@
+# OpenTodo
+
+> OpenTodo is a cleaner, open-source task app with smart lists, quick capture, subtasks, search, themes, and polished desktop and mobile views. Part of OpenOak. Free.
+
+## Sibling OpenOak apps
+
+- [OpenOutline](https://www.openoutline.org/): Structured open-source notes app for outlines, drafts, and reference material that stays easy to scan. In development.
+- [OpenKanban](https://www.openkanbanboard.org/): Open-source, board-based planner for projects and workflows, moving work across clear stages. In development.
+
+## Moving from Microsoft To Do
+
+- [Microsoft To Do alternative](https://www.opentodo.org/microsoft-to-do-alternative): Microsoft To Do shuts down on 30 June 2027. How to move lists and tasks to OpenTodo by copy and paste or an export file, and what carries over.
+
+## About OpenOak
+
+- [OpenOak](https://www.openoak.org/): The team behind OpenTodo. A small set of easy-to-use, open-source productivity tools that feel coherent, calm, and good to use. One account across all apps.
+- [Privacy Policy](https://www.openoak.org/legal/#privacy): No cookies, analytics, fingerprinting, ads, or tracking on the websites.
+- [Terms of Service](https://www.openoak.org/legal/#terms): Code is open source under AGPL-3.0-or-later. Governed by Dutch and EU law.

@@ -1,0 +1,10 @@
+RewriteEngine On
+
+# 301: /legal.html -> /legal
+RewriteCond %{THE_REQUEST} \s/([^.?#\s]+)\.html [NC]
+RewriteRule ^ /%1 [R=301,L]
+
+# Internally serve foo.html for clean URL /foo
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^.]+)$ $1.html [L]

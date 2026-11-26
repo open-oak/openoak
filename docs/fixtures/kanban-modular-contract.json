@@ -1,0 +1,235 @@
+{
+  "contractVersion": 2,
+  "mappings": [
+    {
+      "ownerId": "alice",
+      "id": "main",
+      "boardKey": "alice-main-key"
+    },
+    {
+      "ownerId": "alice",
+      "id": "project",
+      "boardKey": "alice-project-key"
+    },
+    {
+      "ownerId": "bob",
+      "id": "main",
+      "boardKey": "bob-main-key"
+    }
+  ],
+  "documents": [
+    {
+      "ownerId": "alice",
+      "activeBoardId": "main",
+      "revision": 7,
+      "boards": [
+        {
+          "id": "main",
+          "name": "Home",
+          "theme": "green",
+          "wallpaper": "5",
+          "wallpaperBlur": true,
+          "lists": [
+            {
+              "id": "todo",
+              "name": "To do",
+              "color": "blue",
+              "icon": "circle"
+            },
+            {
+              "id": "doing",
+              "name": "Doing",
+              "color": "gold",
+              "icon": "clock"
+            },
+            {
+              "id": "done",
+              "name": "Done",
+              "color": "green",
+              "icon": "check"
+            }
+          ],
+          "tasks": [
+            {
+              "id": "1",
+              "title": "Plan",
+              "description": "Keep the whole note\n- detail",
+              "dueDate": "2026-10-12",
+              "color": "yellow",
+              "listId": "todo",
+              "order": 0
+            },
+            {
+              "id": "2",
+              "title": "",
+              "description": "Unfinished draft",
+              "dueDate": "",
+              "color": null,
+              "listId": "todo",
+              "order": 1
+            },
+            {
+              "id": "3",
+              "title": "Build",
+              "description": "",
+              "dueDate": "",
+              "color": null,
+              "listId": "doing",
+              "order": 0
+            }
+          ]
+        },
+        {
+          "id": "project",
+          "name": "Project",
+          "lists": [
+            {
+              "id": "todo",
+              "name": "To do",
+              "color": "blue",
+              "icon": "circle"
+            }
+          ],
+          "tasks": [
+            {
+              "id": "1",
+              "title": "Independent board",
+              "listId": "todo",
+              "order": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ownerId": "bob",
+      "activeBoardId": "main",
+      "revision": 2,
+      "boards": [
+        {
+          "id": "main",
+          "name": "Bob's private board",
+          "lists": [
+            {
+              "id": "todo",
+              "name": "To do",
+              "color": "blue",
+              "icon": "circle"
+            }
+          ],
+          "tasks": [
+            {
+              "id": "1",
+              "title": "Private",
+              "listId": "todo",
+              "order": 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "operations": {
+    "update": {
+      "contractVersion": 2,
+      "operationId": "update-1",
+      "boardKey": "alice-main-key",
+      "type": "card.update",
+      "cardId": "1",
+      "expectedContentVersion": 1,
+      "changes": {
+        "title": "Prepare release"
+      }
+    },
+    "unrelated": {
+      "contractVersion": 2,
+      "operationId": "update-2",
+      "boardKey": "alice-main-key",
+      "type": "card.update",
+      "cardId": "2",
+      "expectedContentVersion": 1,
+      "changes": {
+        "description": "Draft survives"
+      }
+    },
+    "otherBoard": {
+      "contractVersion": 2,
+      "operationId": "update-other-board",
+      "boardKey": "alice-project-key",
+      "type": "card.update",
+      "cardId": "1",
+      "expectedContentVersion": 1,
+      "changes": {
+        "title": "Project release"
+      }
+    },
+    "move": {
+      "contractVersion": 2,
+      "operationId": "move-1",
+      "boardKey": "alice-main-key",
+      "type": "card.move",
+      "cardId": "1",
+      "expectedPlacementVersion": 1,
+      "sourceListId": "todo",
+      "destinationListId": "doing",
+      "expectedOrderVersions": {
+        "todo": 1,
+        "doing": 1
+      },
+      "index": 1
+    },
+    "reorderList": {
+      "contractVersion": 2,
+      "operationId": "list-move-1",
+      "boardKey": "alice-main-key",
+      "type": "list.move",
+      "listId": "done",
+      "expectedListOrderVersion": 1,
+      "index": 0
+    },
+    "create": {
+      "contractVersion": 2,
+      "operationId": "create-1",
+      "boardKey": "alice-main-key",
+      "type": "card.create",
+      "cardId": "new-card",
+      "listId": "todo",
+      "expectedOrderVersion": 1,
+      "title": "Created offline",
+      "description": "Persist once",
+      "dueDate": "",
+      "color": null
+    },
+    "delete": {
+      "contractVersion": 2,
+      "operationId": "delete-1",
+      "boardKey": "alice-main-key",
+      "type": "card.delete",
+      "cardId": "1",
+      "expectedContentVersion": 1,
+      "expectedPlacementVersion": 1
+    }
+  },
+  "expectations": {
+    "afterMove": {
+      "todo": [
+        "2"
+      ],
+      "doing": [
+        "3",
+        "1"
+      ],
+      "done": []
+    },
+    "afterListMove": [
+      "done",
+      "todo",
+      "doing"
+    ],
+    "rollback": {
+      "sourceRevision": 7,
+      "compatibilityRevision": 8,
+      "title": "Prepare release"
+    }
+  }
+}

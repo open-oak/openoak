@@ -1,0 +1,87 @@
+/* CONFIG is generated per app by scripts/generate-pwa.mjs. */
+const CACHE = `${CONFIG.prefix}${CONFIG.version}`;
+const ASSET_CACHE = `${CACHE}-assets`;
+const OFFLINE_URL = "/offline.html";
+const PRECACHE = [OFFLINE_URL, "/offline.css", "/icon-192.png", "/icon-512.png", "/icon-maskable-512.png", "/apple-touch-icon.png"];
+let refreshingShell;
+
+// Cache the public shell only after all matching versioned assets are available.
+// Authenticated HTML, API responses and mutation requests always use the network.
+async function cacheBoardShell() {
+  if (refreshingShell) return refreshingShell;
+  refreshingShell = (async () => {
+    const response = await fetch("/offline", { cache: "reload", credentials: "omit" });
+    if (!response.ok || response.redirected || !response.headers.get("content-type")?.includes("text/html")) throw new Error("Offline shell unavailable");
+    const html = await response.clone().text();
+    const assets = [...new Set([...html.matchAll(/(?:src|href)="([^"]+)"/g)].map((match) => match[1]).filter((path) => path.startsWith("/_next/static/")))];
+    const cache = await caches.open(CACHE);
+    await cache.addAll(assets);
+    await cache.put("/offline", response);
+    // Retain only the current public shell's dependencies in this cache.
+    const retained = new Set([...PRECACHE, "/offline", ...assets].map((path) => new URL(path, self.location.origin).href));
+    for (const request of await cache.keys()) {
+      if (!retained.has(request.url)) await cache.delete(request);
+    }
+  })();
+  try { await refreshingShell; } finally { refreshingShell = undefined; }
+}
+
+self.addEventListener("install", (event) => {
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE);
+    await cache.addAll(PRECACHE);
+    if (CONFIG.boardShell) await cacheBoardShell();
+    // Updates wait for existing app windows to close, preserving open editors.
+  })());
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil((async () => {
+    for (const key of await caches.keys()) {
+      const owned = key.startsWith(CONFIG.prefix) || CONFIG.legacyCaches.some((prefix) => key.startsWith(prefix));
+      if (owned && key !== CACHE && key !== ASSET_CACHE) await caches.delete(key);
+    }
+    await self.clients.claim();
+  })());
+});
+
+async function staticAsset(request) {
+  try {
+    const precached = await (await caches.open(CACHE)).match(request);
+    if (precached) return precached;
+    const cached = await (await caches.open(ASSET_CACHE)).match(request);
+    if (cached) return cached;
+  } catch { /* A storage failure must not block an online asset request. */ }
+  const response = await fetch(request);
+  if (response.ok && !response.redirected) {
+    try {
+      const cache = await caches.open(ASSET_CACHE);
+      await cache.put(request, response.clone());
+      const keys = await cache.keys();
+      await Promise.all(keys.slice(0, Math.max(0, keys.length - 96)).map((key) => cache.delete(key)));
+    } catch { /* Storage may be full or disabled; the network response is usable. */ }
+  }
+  return response;
+}
+
+self.addEventListener("fetch", (event) => {
+  const request = event.request;
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin || request.method !== "GET" || url.pathname.startsWith("/api/")) return;
+
+  if (request.mode === "navigate") {
+    const board = CONFIG.boardShell && (url.pathname === "/" || url.pathname === "/offline");
+    const online = fetch(request);
+    if (board) event.waitUntil(online.then((response) => {
+      if (response.ok && !response.redirected) return cacheBoardShell();
+    }).catch(() => {}));
+    event.respondWith(online.catch(async () => {
+      const cache = await caches.open(CACHE);
+      return (board && await cache.match("/offline")) || await cache.match(OFFLINE_URL) || Response.error();
+    }));
+  } else if (url.pathname.startsWith("/_next/static/")) {
+    event.respondWith(staticAsset(request));
+  } else if (PRECACHE.includes(url.pathname)) {
+    event.respondWith((async () => (await (await caches.open(CACHE)).match(request)) || fetch(request))());
+  }
+});

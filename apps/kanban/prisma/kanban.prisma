@@ -1,0 +1,233 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/kanban"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  image         String?
+  emailVerified Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  ipAddress String?
+  userAgent String?
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
+  @@index([token])
+}
+
+model Account {
+  id String @id @default(cuid())
+  accountId String
+  providerId String
+  userId String
+  accessToken String?
+  refreshToken String?
+  idToken String?
+  accessTokenExpiresAt DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope String?
+  password String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
+}
+
+model Verification {
+  id String @id @default(cuid())
+  identifier String
+  value String
+  expiresAt DateTime
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+
+model KanbanDocument {
+  userId        String   @id
+  boards        Json
+  activeBoardId String
+  revision      Int      @default(1)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now()) @updatedAt
+}
+
+// Identity mappings outlive shadow rebuilds and board deletion during migration.
+model KanbanBoardIdentity {
+  boardKey String @id
+  ownerId  String
+  id       String
+  boards   KanbanBoard[]
+  profiles KanbanProfile[] @relation("OwnedActiveBoard")
+  selections KanbanProfile[] @relation("SelectedBoard")
+  @@unique([ownerId, id])
+  @@unique([boardKey, ownerId, id])
+  @@unique([boardKey, ownerId])
+}
+
+model KanbanBoard {
+  boardKey         String @id
+  ownerId          String
+  id               String
+  name             String
+  theme            String
+  wallpaper        String
+  wallpaperBlur    Boolean
+  position         Int
+  metadataVersion  Int @default(1)
+  listOrderVersion Int @default(1)
+  revision         Int @default(1)
+  cardCount        Int @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  identity         KanbanBoardIdentity @relation(fields: [boardKey, ownerId, id], references: [boardKey, ownerId, id], onDelete: Restrict)
+  lists            KanbanList[]
+  inviteNonce      String? @unique
+  members          KanbanBoardMember[]
+  trash            KanbanCardTrash[]
+  @@unique([ownerId, id])
+  @@index([ownerId, position])
+}
+
+model KanbanList {
+  boardKey        String
+  id              String
+  name            String
+  color           String
+  icon            String
+  position        Int
+  metadataVersion Int @default(1)
+  orderVersion    Int @default(1)
+  cardCount       Int @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  board           KanbanBoard @relation(fields: [boardKey], references: [boardKey], onDelete: Cascade)
+  cards           KanbanCard[]
+  @@id([boardKey, id])
+  @@index([boardKey, position])
+}
+
+model KanbanCard {
+  boardKey         String
+  id               String
+  listId           String
+  position         Int
+  title            String
+  description      String
+  dueDate          String
+  color            String?
+  contentVersion   Int @default(1)
+  placementVersion Int @default(1)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  list             KanbanList @relation(fields: [boardKey, listId], references: [boardKey, id], onDelete: Restrict)
+  @@id([boardKey, id])
+  @@index([boardKey, listId, position])
+}
+
+model KanbanCardTrash {
+  boardKey         String
+  id               String
+  listId           String
+  position         Int
+  title            String
+  description      String
+  dueDate          String
+  color            String?
+  contentVersion   Int
+  placementVersion Int
+  createdAt        DateTime
+  updatedAt        DateTime @updatedAt
+  deletedAt        DateTime @default(now())
+  deletionId       String @default(dbgenerated("(gen_random_uuid())::text"))
+  board            KanbanBoard @relation(fields: [boardKey], references: [boardKey], onDelete: Cascade)
+  @@id([boardKey, id])
+  @@index([boardKey, deletedAt, id])
+}
+
+model KanbanProfile {
+  userId            String @id
+  activeBoardKey    String
+  boardOrderVersion Int @default(1)
+  version           Int @default(1)
+  selectedBoardKey  String?
+  selectedIdentity  KanbanBoardIdentity? @relation("SelectedBoard", fields: [selectedBoardKey], references: [boardKey], onDelete: Restrict)
+  activeIdentity    KanbanBoardIdentity @relation("OwnedActiveBoard", fields: [activeBoardKey, userId], references: [boardKey, ownerId], onDelete: Restrict)
+}
+
+// KAN-02 writes only legacy mode. Authority switches require later bridge code.
+model KanbanTransition {
+  ownerId        String @id
+  storageMode    String @default("legacy")
+  migrationEpoch Int @default(1)
+  sourceRevision Int?
+  sourceDigest   String?
+  sourceDocument Json?
+  evidence       Json?
+  verifiedAt     DateTime?
+  compatibilityMirror Boolean @default(true)
+}
+
+model KanbanOperationReceipt {
+  actorId String
+  operationId String
+  ownerId String
+  boardKey String?
+  inputHash String
+  result Json
+  createdAt DateTime @default(now())
+  @@id([actorId, operationId])
+}
+
+model KanbanEntityIdentity {
+  boardKey String
+  kind String
+  id String
+  @@id([boardKey, kind, id])
+}
+
+model KanbanChange {
+  boardKey String
+  revision Int
+  sequence Int
+  kind String
+  id String
+  deleted Boolean @default(false)
+  @@id([boardKey, revision, sequence])
+}
+
+model KanbanRollbackSnapshot {
+  ownerId               String @id
+  document              Json
+  compatibilityRevision Int
+  checkpoint            Json
+  digest                String
+  updatedAt             DateTime @updatedAt
+}
+
+model KanbanBoardMember {
+  boardKey String
+  userId String
+  joinedAt DateTime @default(now())
+  board KanbanBoard @relation(fields: [boardKey], references: [boardKey], onDelete: Cascade)
+  @@id([boardKey, userId])
+  @@index([userId, boardKey])
+}

@@ -1,0 +1,82 @@
+name: Production health
+
+on:
+  workflow_dispatch:
+    inputs:
+      simulate_failure:
+        description: Verify that native GitHub failure notifications arrive
+        required: false
+        default: false
+        type: boolean
+  deployment_status:
+
+permissions:
+  contents: read
+
+jobs:
+  manual:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check public health endpoints
+        run: |
+          set -euo pipefail
+          for endpoint in \
+            https://account.openoak.org/health \
+            https://todo.openoak.org/health \
+            https://kanban.openoak.org/health \
+            https://outline.openoak.org/health \
+            https://mcp.openoak.org/health
+          do
+            curl --fail --silent --show-error --max-time 20 "$endpoint"
+          done
+      - name: Simulate notification failure
+        if: inputs.simulate_failure
+        run: exit 1
+
+  post-deploy:
+    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success' && startsWith(github.event.deployment.environment, 'Production')
+    runs-on: ubuntu-latest
+    concurrency:
+      group: production-smoke-${{ github.event.deployment.environment }}
+      cancel-in-progress: true
+    env:
+      DEPLOYMENT_ENVIRONMENT: ${{ github.event.deployment.environment }}
+    steps:
+      - name: Select smoke-test endpoint
+        id: endpoint
+        run: |
+          case "$DEPLOYMENT_ENVIRONMENT" in
+            "Production – open-oak") homepage="https://account.openoak.org/"; health="https://account.openoak.org/health"; redirect="" ;;
+            "Production – open-todo") homepage="https://todo.openoak.org/login"; health="https://todo.openoak.org/health"; redirect="https://todo.openoak.org/" ;;
+            "Production – open-kanbanboard") homepage="https://kanban.openoak.org/login"; health="https://kanban.openoak.org/health"; redirect="https://kanban.openoak.org/" ;;
+            "Production – open-outline") homepage="https://outline.openoak.org/login"; health="https://outline.openoak.org/health"; redirect="https://outline.openoak.org/" ;;
+            "Production – openoak-mcp") homepage="https://mcp.openoak.org/health"; health="https://mcp.openoak.org/health"; redirect="" ;;
+            "Production – open-oak-website") homepage="https://openoak.org/"; health=""; redirect="" ;;
+            "Production – open-todo-website") homepage="https://opentodo.org/"; health=""; redirect="" ;;
+            "Production – open-kanbanboard-website") homepage="https://openkanbanboard.org/"; health=""; redirect="" ;;
+            "Production – open-outline-website") homepage="https://openoutline.org/"; health=""; redirect="" ;;
+            *) exit 0 ;;
+          esac
+          echo "homepage=$homepage" >> "$GITHUB_OUTPUT"
+          echo "health=$health" >> "$GITHUB_OUTPUT"
+          echo "redirect=$redirect" >> "$GITHUB_OUTPUT"
+      - name: Verify homepage and health
+        if: steps.endpoint.outputs.homepage
+        env:
+          HOMEPAGE: ${{ steps.endpoint.outputs.homepage }}
+          HEALTH: ${{ steps.endpoint.outputs.health }}
+        run: |
+          curl --fail --silent --show-error --location --retry 5 --retry-delay 10 --max-time 20 "$HOMEPAGE" >/dev/null
+          if [ -n "$HEALTH" ]; then
+            curl --fail --silent --show-error --retry 5 --retry-delay 10 --max-time 20 "$HEALTH"
+          fi
+      - name: Verify anonymous authentication redirect
+        if: steps.endpoint.outputs.redirect
+        env:
+          REDIRECT: ${{ steps.endpoint.outputs.redirect }}
+        run: |
+          headers="$(mktemp)"
+          trap 'rm -f "$headers"' EXIT
+          curl --silent --show-error --retry 5 --retry-delay 10 --max-time 20 --output /dev/null --dump-header "$headers" "$REDIRECT"
+          grep -Eqi '^location: https://account\.openoak\.org/login|^location: /apps' "$headers"

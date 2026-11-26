@@ -1,0 +1,766 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+@source "../../../shared";
+@import "tw-animate-css";
+@import "./shadcn-variants.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-primary: var(--primary);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+}
+
+:root {
+  --background: oklch(0.955 0 0);
+  --foreground: oklch(0.23 0 0);
+  --card: oklch(0.986 0 0 / 75%);
+  --card-foreground: oklch(0.22 0 0);
+  --popover: oklch(0.986 0 0);
+  --popover-foreground: oklch(0.22 0 0);
+  --primary: oklch(0.52 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.944 0 0);
+  --secondary-foreground: oklch(0.28 0 0);
+  --muted: oklch(0.93 0 0);
+  --muted-foreground: oklch(0.5 0 0);
+  --accent: oklch(0.914 0 0);
+  --accent-foreground: oklch(0.28 0 0);
+  --destructive: oklch(0.58 0.22 27);
+  --border: oklch(0.865 0 0);
+  --input: oklch(0.865 0 0);
+  --ring: oklch(0.62 0 0);
+  --radius: 0.625rem;
+  --notes-bg-start: oklch(0.955 0 0);
+  --notes-bg-end: oklch(0.91 0 0);
+  --notes-panel: oklch(0.975 0 0 / 75%);
+  --notes-editor-panel: oklch(0.975 0 0 / 90%);
+  --notes-panel-mobile: oklch(0.975 0 0 / 75%);
+  --notes-panel-solid: oklch(0.975 0 0);
+  --notes-panel-border: oklch(0.89 0 0);
+  --notes-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --notes-accent: var(--accent);
+  --notes-accent-soft: color-mix(in oklab, var(--accent) 22%, var(--background));
+  --notes-accent-text: var(--accent-foreground);
+}
+
+:root.dark {
+  --background: oklch(0.205 0 0);
+  --foreground: oklch(0.94 0 0);
+  --card: oklch(0.26 0 0 / 75%);
+  --card-foreground: oklch(0.95 0 0);
+  --popover: oklch(0.26 0 0);
+  --popover-foreground: oklch(0.95 0 0);
+  --primary: oklch(0.78 0 0);
+  --primary-foreground: oklch(0.25 0 0);
+  --secondary: oklch(0.315 0 0);
+  --secondary-foreground: oklch(0.94 0 0);
+  --muted: oklch(0.335 0 0);
+  --muted-foreground: oklch(0.76 0 0);
+  --accent: oklch(0.37 0 0);
+  --accent-foreground: oklch(0.95 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(0.72 0 0 / 20%);
+  --input: oklch(0.72 0 0 / 24%);
+  --ring: oklch(0.72 0 0);
+  --notes-bg-start: oklch(0.205 0 0);
+  --notes-bg-end: oklch(0.25 0 0);
+  --notes-panel: oklch(0.28 0 0 / 75%);
+  --notes-editor-panel: oklch(0.28 0 0 / 90%);
+  --notes-panel-mobile: oklch(0.28 0 0 / 75%);
+  --notes-panel-solid: oklch(0.28 0 0);
+  --notes-panel-border: oklch(0.72 0 0 / 20%);
+  --notes-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+.notes-theme-background {
+  background-color: var(--background);
+  background-image: linear-gradient(180deg, var(--background), var(--background));
+}
+
+:root.dark .notes-theme-background:not([data-theme="default"]),
+:root:not(.light) .notes-theme-background:not([data-theme="default"]) {
+  background-color: var(--theme-dark-base);
+  background-image:
+    radial-gradient(130% 96% at 6% 4%, color-mix(in oklab, var(--theme-dark-glow-a) 58%, var(--theme-dark-base)), transparent 56%),
+    radial-gradient(112% 88% at 96% 6%, color-mix(in oklab, var(--theme-dark-glow-b) 50%, var(--theme-dark-base)), transparent 58%),
+    radial-gradient(120% 92% at 52% 110%, color-mix(in oklab, var(--theme-dark-glow-c) 50%, var(--theme-dark-base)), transparent 62%),
+    linear-gradient(146deg, var(--theme-dark-ribbon-1) 0%, var(--theme-dark-ribbon-2) 52%, var(--theme-dark-ribbon-3) 100%),
+    linear-gradient(112deg, rgb(255 255 255 / 0.06) 0%, transparent 44%, rgb(0 0 0 / 0.025) 100%);
+}
+
+:root.light .notes-theme-background:not([data-theme="default"]) {
+  background-image:
+    radial-gradient(128% 98% at 4% 2%, color-mix(in oklab, var(--theme-glow-a) 72%, white), transparent 55%),
+    radial-gradient(108% 88% at 98% 6%, color-mix(in oklab, var(--theme-glow-b) 62%, white), transparent 57%),
+    radial-gradient(118% 94% at 52% 106%, color-mix(in oklab, var(--theme-glow-c) 46%, white), transparent 60%),
+    linear-gradient(146deg, var(--theme-ribbon-1) 0%, var(--theme-ribbon-2) 50%, var(--theme-ribbon-3) 100%),
+    linear-gradient(112deg, rgb(255 255 255 / 0.34) 0%, rgb(255 255 255 / 0.08) 45%, transparent 100%);
+}
+
+.notes-theme-background[data-theme="blue"] {
+  background-color: #bbdcff;
+  --theme-glow-a: #69b8ff;
+  --theme-glow-b: #3d93f9;
+  --theme-glow-c: #a2e0ff;
+  --theme-ribbon-1: #eff8ff;
+  --theme-ribbon-2: #cee6ff;
+  --theme-ribbon-3: #a8d0ff;
+  --theme-dark-base: #27405f;
+  --theme-dark-glow-a: #4d94f0;
+  --theme-dark-glow-b: #2f6fcd;
+  --theme-dark-glow-c: #72b8ff;
+  --theme-dark-ribbon-1: #2e4a70;
+  --theme-dark-ribbon-2: #27405f;
+  --theme-dark-ribbon-3: #213751;
+}
+
+.notes-theme-background[data-theme="purple"] {
+  background-color: #d9c0ff;
+  --theme-glow-a: #c48eff;
+  --theme-glow-b: #8a5aec;
+  --theme-glow-c: #e0b4ff;
+  --theme-ribbon-1: #f8ecff;
+  --theme-ribbon-2: #e4cbff;
+  --theme-ribbon-3: #c79eff;
+  --theme-dark-base: #403265;
+  --theme-dark-glow-a: #8d6be3;
+  --theme-dark-glow-b: #6f4fc4;
+  --theme-dark-glow-c: #b78cff;
+  --theme-dark-ribbon-1: #47376f;
+  --theme-dark-ribbon-2: #3e3162;
+  --theme-dark-ribbon-3: #352955;
+}
+
+.notes-theme-background[data-theme="coral"] {
+  background-color: #ffc8b4;
+  --theme-glow-a: #ff9b78;
+  --theme-glow-b: #ff6f5c;
+  --theme-glow-c: #ffd0b8;
+  --theme-ribbon-1: #fff1e8;
+  --theme-ribbon-2: #ffd6c4;
+  --theme-ribbon-3: #ffb097;
+  --theme-dark-base: #55373c;
+  --theme-dark-glow-a: #d86f62;
+  --theme-dark-glow-b: #b45449;
+  --theme-dark-glow-c: #ff9c86;
+  --theme-dark-ribbon-1: #5f3d43;
+  --theme-dark-ribbon-2: #53353a;
+  --theme-dark-ribbon-3: #492f34;
+}
+
+.notes-theme-background[data-theme="green"] {
+  background-color: #c1efcd;
+  --theme-glow-a: #80e0a4;
+  --theme-glow-b: #48b97a;
+  --theme-glow-c: #c8f4d6;
+  --theme-ribbon-1: #ecfff2;
+  --theme-ribbon-2: #d2f2dc;
+  --theme-ribbon-3: #ade7c0;
+  --theme-dark-base: #2f4b3a;
+  --theme-dark-glow-a: #56bd83;
+  --theme-dark-glow-b: #3a9562;
+  --theme-dark-glow-c: #86d9a8;
+  --theme-dark-ribbon-1: #355541;
+  --theme-dark-ribbon-2: #2d4838;
+  --theme-dark-ribbon-3: #284233;
+}
+
+.notes-theme-background[data-theme="gold"] {
+  background-color: #f7dd98;
+  --theme-glow-a: #ffcf5d;
+  --theme-glow-b: #d3a337;
+  --theme-glow-c: #ffe8af;
+  --theme-ribbon-1: #fff6d5;
+  --theme-ribbon-2: #f9e2a1;
+  --theme-ribbon-3: #f0c975;
+  --theme-dark-base: #52422a;
+  --theme-dark-glow-a: #d6ab49;
+  --theme-dark-glow-b: #ad812d;
+  --theme-dark-glow-c: #f0c567;
+  --theme-dark-ribbon-1: #5c4a2d;
+  --theme-dark-ribbon-2: #503f29;
+  --theme-dark-ribbon-3: #473924;
+}
+
+:root.dark .notes-theme-background[data-theme]:not([data-theme="default"]) {
+  background-color: var(--theme-dark-base);
+}
+
+:root.light[data-current-theme="blue"] { --accent: oklch(0.52 0.13 258); --accent-foreground: oklch(0.985 0 0); }
+:root.light[data-current-theme="purple"] { --accent: oklch(0.54 0.14 290); --accent-foreground: oklch(0.985 0 0); }
+:root.light[data-current-theme="coral"] { --accent: oklch(0.58 0.15 30); --accent-foreground: oklch(0.985 0 0); }
+:root.light[data-current-theme="green"] { --accent: oklch(0.50 0.14 142); --accent-foreground: oklch(0.985 0 0); }
+:root.light[data-current-theme="gold"] { --accent: oklch(0.60 0.14 85); --accent-foreground: oklch(0.985 0 0); }
+:root.dark[data-current-theme="blue"] { --accent: oklch(0.78 0.11 252); --accent-foreground: oklch(0.25 0.02 258); }
+:root.dark[data-current-theme="purple"] { --accent: oklch(0.75 0.13 290); --accent-foreground: oklch(0.25 0.02 258); }
+:root.dark[data-current-theme="coral"] { --accent: oklch(0.68 0.15 30); --accent-foreground: oklch(0.25 0.02 258); }
+:root.dark[data-current-theme="green"] { --accent: oklch(0.62 0.14 142); --accent-foreground: oklch(0.25 0.02 258); }
+:root.dark[data-current-theme="gold"] { --accent: oklch(0.70 0.14 85); --accent-foreground: oklch(0.25 0.02 258); }
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-sans);
+  overflow: hidden;
+}
+
+button,
+textarea,
+input {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--primary) 24%, transparent);
+}
+
+@keyframes surface-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes wallpaper-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.animate-surface-in {
+  animation: surface-in 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-wallpaper-in {
+  animation-name: wallpaper-in;
+  animation-timing-function: ease;
+  animation-fill-mode: both;
+}
+
+.notes-root {
+  top: var(--notes-viewport-offset-top, 0px);
+  height: var(--notes-viewport-height, 100svh);
+  color: var(--foreground);
+  background: linear-gradient(135deg, var(--notes-bg-start), var(--notes-bg-end));
+  isolation: isolate;
+}
+
+.notes-main-shell {
+  gap: 0.5rem;
+  padding:
+    max(0.5rem, env(safe-area-inset-top))
+    max(0.5rem, env(safe-area-inset-right))
+    max(0.5rem, env(safe-area-inset-bottom))
+    max(0.5rem, env(safe-area-inset-left));
+}
+
+.notes-panel {
+  border: 0;
+  border-radius: var(--radius-xl);
+  background: var(--notes-panel);
+  box-shadow: var(--notes-shadow), 0 0 0 1px var(--notes-panel-border);
+}
+
+.notes-editor-panel {
+  background: var(--notes-editor-panel);
+}
+
+.notes-panel-solid,
+.notes-no-glass .notes-panel {
+  background: var(--notes-panel-solid);
+}
+
+.notes-action-surface {
+  border: 0;
+  background: var(--card);
+  box-shadow: none;
+}
+
+.notes-no-glass .notes-action-surface {
+  background: var(--popover);
+}
+
+.notes-search {
+  height: 2.5rem;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: color-mix(in oklab, var(--muted) 46%, transparent);
+  padding: 0 0.8rem;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.notes-list-item {
+  content-visibility: auto;
+  contain-intrinsic-size: 76px;
+}
+
+/* One continuous stem joins the parent folder to the last rounded elbow.
+   Each preview is 4.25rem tall: title, one excerpt line, and padding. */
+.notes-folder-list {
+  --notes-preview-height: 4.25rem;
+  --notes-connector-color: color-mix(in oklab, var(--muted-foreground) 75%, var(--notes-panel-solid));
+  position: relative;
+}
+
+.notes-folder-list::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: calc(var(--notes-preview-height) / 2 + 6px);
+  left: 0;
+  width: 1px;
+  background: var(--notes-connector-color);
+  pointer-events: none;
+}
+
+.notes-folder-child {
+  position: relative;
+  padding-top: 4px;
+  padding-left: 16px;
+}
+
+.notes-folder-child > div {
+  height: var(--notes-preview-height);
+}
+
+.notes-folder-connector {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 16px;
+  color: var(--notes-connector-color);
+  pointer-events: none;
+}
+
+.notes-folder-connector svg {
+  position: absolute;
+  top: calc(50% - 6px);
+  left: 0;
+  width: 16px;
+  height: 8px;
+  overflow: visible;
+}
+
+.notes-primary-button,
+.notes-secondary-button,
+.notes-danger-button,
+.notes-sidebar-button,
+.notes-icon-button,
+.notes-mini-button,
+.notes-segment {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease,
+    opacity 160ms ease;
+}
+
+.notes-primary-button {
+  min-height: 2.75rem;
+  border-radius: 999px;
+  background: var(--notes-accent);
+  color: var(--notes-accent-text);
+  padding: 0 1rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.notes-secondary-button {
+  min-height: 2.5rem;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: color-mix(in oklab, var(--muted) 34%, transparent);
+  color: var(--foreground);
+  padding: 0 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.notes-danger-button {
+  min-height: 2.75rem;
+  border-radius: 999px;
+  background: rgb(185 28 28 / 0.12);
+  color: #b91c1c;
+  padding: 0 1rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+:root.dark .notes-danger-button {
+  color: #fecaca;
+  background: rgb(248 113 113 / 0.13);
+}
+
+.notes-sidebar-button {
+  width: 100%;
+  min-height: 2.5rem;
+  justify-content: flex-start;
+  border-radius: var(--radius-2xl);
+  color: var(--foreground);
+  padding: 0 0.75rem;
+  font-size: 14.5px;
+  font-weight: 400;
+}
+
+.notes-icon-button,
+.notes-mini-button {
+  background: color-mix(in oklab, var(--muted) 42%, transparent);
+  color: var(--foreground);
+}
+
+.notes-icon-button {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+}
+
+.notes-mini-button {
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 0.7rem;
+}
+
+.notes-segment {
+  min-height: 2.45rem;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: color-mix(in oklab, var(--muted) 26%, transparent);
+  color: var(--muted-foreground);
+  padding: 0 0.75rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.notes-segment-active {
+  background: var(--notes-accent);
+  color: var(--notes-accent-text);
+  border-color: transparent;
+}
+
+.notes-primary-button:hover,
+.notes-secondary-button:hover,
+.notes-danger-button:hover,
+.notes-sidebar-button:hover,
+.notes-icon-button:hover,
+.notes-mini-button:hover,
+.notes-segment:hover {
+  transform: translateY(-1px);
+}
+
+.notes-primary-button:focus-visible,
+.notes-secondary-button:focus-visible,
+.notes-danger-button:focus-visible,
+.notes-sidebar-button:focus-visible,
+.notes-icon-button:focus-visible,
+.notes-mini-button:focus-visible,
+.notes-segment:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--notes-accent) 78%, white);
+  outline-offset: 2px;
+}
+
+.notes-search:focus-within {
+  border-color: color-mix(in oklab, var(--notes-accent) 52%, var(--border));
+  background: color-mix(in oklab, var(--muted) 58%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--notes-accent) 18%, transparent);
+}
+
+.notes-primary-button:disabled,
+.notes-secondary-button:disabled,
+.notes-danger-button:disabled,
+.notes-icon-button:disabled,
+.notes-mini-button:disabled,
+.notes-segment:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+  transform: none;
+}
+
+.notes-editor-textarea,
+.notes-editor-content {
+  caret-color: var(--foreground);
+}
+
+.notes-format-toolbar {
+  overflow-y: hidden;
+  scrollbar-width: none !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+.notes-format-toolbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0;
+  height: 0;
+}
+
+.notes-rich-editor > div,
+.notes-editor-content {
+  min-width: 0;
+  max-width: 100%;
+  min-height: inherit;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.notes-editor-content pre {
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+
+.notes-editor-content p,
+.notes-editor-content h2,
+.notes-editor-content blockquote,
+.notes-editor-content ul,
+.notes-editor-content ol {
+  margin: 0 0 0.45rem;
+}
+
+.notes-editor-content h2 {
+  margin-top: 0.85rem;
+  font-size: 1.35em;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.notes-editor-content ul:not([data-type="taskList"]),
+.notes-editor-content ol {
+  padding-left: 1.5rem;
+}
+
+.notes-editor-content ul:not([data-type="taskList"]) {
+  list-style: disc;
+}
+
+.notes-editor-content ol {
+  list-style: decimal;
+}
+
+.notes-editor-content ul[data-type="taskList"] {
+  list-style: none;
+  padding-left: 0;
+}
+
+.notes-editor-content ul[data-type="taskList"] > li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+}
+
+.notes-editor-content ul[data-type="taskList"] > li > label {
+  display: inline-flex;
+  padding-top: 0.45rem;
+}
+
+.notes-editor-content ul[data-type="taskList"] > li input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--notes-accent);
+}
+
+.notes-editor-content ul[data-type="taskList"] > li > div {
+  min-width: 0;
+  flex: 1;
+}
+
+.notes-editor-content a {
+  color: var(--notes-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.notes-editor-content p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  color: var(--muted-foreground);
+  pointer-events: none;
+}
+
+/* Insertion line shown while dragging a note over the row it will land against. */
+.notes-drop-before,
+.notes-drop-after {
+  position: relative;
+}
+
+.notes-drop-before::before,
+.notes-drop-after::after {
+  content: "";
+  position: absolute;
+  left: 0.25rem;
+  right: 0.25rem;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--notes-accent);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--notes-accent) 22%, transparent);
+}
+
+.notes-drop-before::before {
+  top: -0.25rem;
+}
+
+.notes-drop-after::after {
+  bottom: -0.25rem;
+}
+
+.notes-root ::selection {
+  background: color-mix(in oklab, var(--foreground) 24%, transparent);
+}
+
+.notes-root * {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--foreground) 22%, transparent) transparent;
+}
+
+.notes-root ::-webkit-scrollbar {
+  width: 10px;
+}
+
+.notes-root ::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--foreground) 22%, transparent);
+  background-clip: padding-box;
+}
+
+@media (max-width: 767px) {
+  .notes-mobile-sheet,
+  .notes-mobile-dialog {
+    top: var(--notes-viewport-offset-top, 0px) !important;
+    height: var(--notes-viewport-height, 100dvh) !important;
+  }
+
+  .notes-mobile-sheet {
+    bottom: auto !important;
+    padding:
+      max(0.5rem, env(safe-area-inset-top))
+      max(0.5rem, env(safe-area-inset-right))
+      max(0.5rem, env(safe-area-inset-bottom))
+      max(0.5rem, env(safe-area-inset-left));
+  }
+
+  .notes-mobile-dialog {
+    padding-right: env(safe-area-inset-right) !important;
+    padding-bottom: env(safe-area-inset-bottom) !important;
+    padding-left: env(safe-area-inset-left) !important;
+  }
+
+  .notes-mobile-dialog > [data-slot="dialog-header"] {
+    padding-top: max(0.75rem, env(safe-area-inset-top));
+  }
+
+  .notes-main-shell {
+    transition: opacity 150ms ease;
+  }
+
+  .notes-mobile-sidebar-open {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .notes-panel {
+    border-radius: var(--radius-xl);
+    background: var(--notes-panel-mobile);
+  }
+
+  .notes-editor-panel {
+    background: var(--notes-editor-panel);
+  }
+
+  .notes-panel-solid,
+  .notes-no-glass .notes-panel {
+    background: var(--notes-panel-solid);
+  }
+
+  .notes-sidebar-button {
+    min-height: 3.5rem;
+    font-size: 1rem;
+  }
+
+  .notes-icon-button {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .notes-search {
+    height: 2.75rem;
+  }
+
+  .notes-editor-scroll {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (min-width: 768px) {
+  .notes-root {
+    top: var(--notes-viewport-offset-top, 0px);
+    height: var(--notes-viewport-height, 100dvh);
+  }
+
+  .notes-main-shell {
+    gap: 1rem;
+    padding: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

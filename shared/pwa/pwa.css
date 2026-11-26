@@ -1,0 +1,49 @@
+.pwa-notices {
+  position: fixed;
+  inset-inline-end: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  z-index: 100;
+  display: grid;
+  gap: .5rem;
+  width: min(24rem, calc(100vw - 2rem));
+  pointer-events: none;
+  font: 400 .875rem/1.5 system-ui, sans-serif;
+}
+.pwa-notice {
+  box-sizing: border-box;
+  pointer-events: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .75rem;
+  padding: .875rem 1rem;
+  border: 1px solid #cbd5cc;
+  border-radius: .75rem;
+  background: #f5f5f5;
+  color: #1c2f26;
+  box-shadow: 0 4px 20px #0002;
+}
+.pwa-notice p { flex: 1 1 100%; margin: 0; }
+.pwa-notice button {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-width: 0;
+  min-height: 2.75rem;
+  margin: 0;
+  padding: .375rem .625rem;
+  border: 1px solid currentColor;
+  border-radius: .375rem;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.pwa-notice > button:first-child { flex: 1 1 auto; }
+.pwa-notice > p + button { margin-inline-start: auto; }
+.pwa-notice button:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+@media (prefers-color-scheme: dark) {
+  .pwa-notice { background: #1e1e1e; color: #f5f5f5; border-color: #53675b; }
+}

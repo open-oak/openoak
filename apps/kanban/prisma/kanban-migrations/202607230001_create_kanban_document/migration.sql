@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS "KanbanDocument" (
+  "userId" TEXT NOT NULL,
+  "boards" JSONB NOT NULL,
+  "activeBoardId" TEXT NOT NULL,
+  "revision" INTEGER NOT NULL DEFAULT 1,
+  "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT "KanbanDocument_pkey" PRIMARY KEY ("userId")
+);

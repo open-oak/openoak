@@ -1,0 +1,14 @@
+# OpenOutline
+
+> OpenOutline is a structured, open-source notes app for outlines, drafts, and reference material that stays easy to scan. Part of OpenOak.
+
+## Sibling OpenOak apps
+
+- [OpenTodo](https://www.opentodo.org/): Open-source task manager: smart lists, quick capture, subtasks, search, themes, polished desktop and mobile. Available now, free.
+- [OpenKanban](https://www.openkanbanboard.org/): Open-source, board-based planner for projects and workflows, moving work across clear stages.
+
+## About OpenOak
+
+- [OpenOak](https://www.openoak.org/): The team behind OpenOutline. A small set of easy-to-use, open-source productivity tools that feel coherent, calm, and good to use. One account across all apps.
+- [Privacy Policy](https://www.openoak.org/legal/#privacy): No cookies, analytics, fingerprinting, ads, or tracking on the websites.
+- [Terms of Service](https://www.openoak.org/legal/#terms): Code is open source under AGPL-3.0-or-later. Governed by Dutch and EU law.

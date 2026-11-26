@@ -1,0 +1,45 @@
+{
+  "name": "@openoak/mcp",
+  "version": "0.1.0",
+  "private": true,
+  "license": "AGPL-3.0-or-later",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "generate:products": "npm --prefix ../outline run generate && npm --prefix ../todo run generate && npm --prefix ../kanban run generate",
+    "build": "npm run generate:products && next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import ./tests/setup-env.mjs --import tsx --test tests/*.test.mjs tests/*.test.ts",
+    "test:kanban": "node --import tsx tests/integration/kanban-v2.test.mjs",
+    "test:conformance": "tsx scripts/run-conformance.ts stable",
+    "test:conformance:next": "tsx scripts/run-conformance.ts next",
+    "benchmark": "node scripts/benchmark.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "2.4.0",
+    "@openoak/kanban": "0.1.0",
+    "@openoak/outline": "0.1.0",
+    "@openoak/todo": "0.1.0",
+    "jose": "^6.2.8",
+    "mcp-handler": "2.3.1",
+    "next": "16.4.6",
+    "pg": "^8.16.3",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/conformance": "0.1.16",
+    "@modelcontextprotocol/conformance-2026": "npm:@modelcontextprotocol/conformance@0.2.0-alpha.11",
+    "@types/node": "^20",
+    "@types/pg": "^8.15.5",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.6",
+    "tsx": "^4.20.6",
+    "typescript": "^5"
+  }
+}

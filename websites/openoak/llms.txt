@@ -1,0 +1,24 @@
+# OpenOak
+
+> OpenOak makes a small set of easy-to-use, open-source productivity tools. Open-source software is often fragmented, technical, and slow to put interface quality first. OpenOak exists to make open tools that feel coherent, calm, and good to use. All apps share one OpenOak account and are released under AGPL-3.0-or-later.
+
+## Apps
+
+- [OpenTodo](https://www.opentodo.org/): Open-source task manager for personal lists and daily planning. Smart lists, quick capture, subtasks, search, themes, and polished desktop and mobile views. Available now, free.
+- [OpenOutline](https://www.openoutline.org/): Structured notes app for outlines, drafts, and reference material that stays easy to scan. Available now, free.
+- [OpenKanban](https://www.openkanbanboard.org/): Board-based planner for projects and workflows, moving work across clear stages. In development.
+
+## Moving from Microsoft To Do
+
+- [English guide](https://www.opentodo.org/microsoft-to-do-alternative): Retirement date, OpenTodo alternative, file import and paste instructions, and transfer limits.
+
+## Account & legal
+
+- [OpenOak account](https://account.openoak.org/sign-up): One account for every OpenOak app.
+- [Privacy Policy](https://www.openoak.org/legal/#privacy): No cookies, analytics, fingerprinting, ads, or tracking on the website. No selling of personal data.
+- [Terms of Service](https://www.openoak.org/legal/#terms): Governed by Dutch and EU law. Code is open source under AGPL-3.0-or-later.
+
+## Notes
+
+- The OpenOak website uses no cookies, analytics, or tracking scripts.
+- OpenOak is built in the Netherlands and complies with EU/Dutch privacy law.

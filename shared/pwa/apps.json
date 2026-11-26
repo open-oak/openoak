@@ -1,0 +1,38 @@
+{
+  "todo": {
+    "name": "OpenTodo",
+    "shortName": "OpenTodo",
+    "description": "Plan your day and manage your tasks with OpenTodo.",
+    "emoji": "✅",
+    "worker": "/sw.js",
+    "legacyCaches": ["open-todo-"],
+    "offlineMessage": "Connect to view and save your tasks, then try again."
+  },
+  "kanban": {
+    "name": "OpenKanban",
+    "shortName": "OpenKanban",
+    "description": "Organize projects and cards with OpenKanban.",
+    "emoji": "📋",
+    "worker": "/kanban-sw.js",
+    "legacyCaches": ["openkanban-shell-"],
+    "offlineMessage": "Open a saved board to keep working offline. Your saved edits sync when you reconnect."
+  },
+  "outline": {
+    "name": "OpenOutline",
+    "shortName": "OpenOutline",
+    "description": "Write and organize your notes with OpenOutline.",
+    "emoji": "📝",
+    "worker": "/sw.js",
+    "legacyCaches": [],
+    "offlineMessage": "Connect to view and save your notes, then try again."
+  },
+  "account": {
+    "name": "OpenOak Account",
+    "shortName": "OpenOak",
+    "description": "Manage your OpenOak account and connected apps.",
+    "emoji": "🌳",
+    "worker": "/sw.js",
+    "legacyCaches": [],
+    "offlineMessage": "Connect to sign in or manage your account, then try again."
+  }
+}

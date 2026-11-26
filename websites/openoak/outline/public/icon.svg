@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" role="img" aria-labelledby="title">
+  <title id="title">Open Outline</title>
+  <rect width="192" height="192" rx="44" fill="#111919"/>
+  <path d="M54 57h84M54 93h84M54 129h56" fill="none" stroke="#f6f3ee" stroke-width="15" stroke-linecap="round"/>
+  <path d="M138 129h-8a36 36 0 0 1-36-36v-1a36 36 0 0 1 36-36h8" fill="none" stroke="#f97316" stroke-width="15" stroke-linecap="round"/>
+</svg>

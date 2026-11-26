@@ -1,0 +1,130 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  image         String?
+  emailVerified Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  ipAddress String?
+  userAgent String?
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
+  @@index([token])
+}
+
+model Account {
+  id String @id @default(cuid())
+  accountId String
+  providerId String
+  userId String
+  accessToken String?
+  refreshToken String?
+  idToken String?
+  accessTokenExpiresAt DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope String?
+  password String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
+}
+
+model Verification {
+  id String @id @default(cuid())
+  identifier String
+  value String
+  expiresAt DateTime
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+
+// OpenOutline-owned data. In shared-auth mode, authentication lives in the
+// central account database. NotesProfile is keyed by the central user id.
+model NotesProfile {
+  id                 String   @id
+  colorMode          String   @default("auto")
+  accentColor        String   @default("default")
+  wallpaper          String   @default("none")
+  wallpaperBlur      Boolean  @default(false)
+  glassEnabled       Boolean  @default(false)
+  sidebarTransparent Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  notes              Note[]
+  folders            Folder[]
+  trash              NoteTrash[]
+}
+
+model Folder {
+  id        String       @id @default(cuid())
+  name      String
+  nameKey   String
+  ownerId   String
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  owner     NotesProfile @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  notes     Note[]
+  trash     NoteTrash[]
+
+  @@unique([ownerId, nameKey])
+  @@index([ownerId, name])
+}
+
+model Note {
+  id        String       @id @default(cuid())
+  title     String
+  body      String       @default("")
+  color     String       @default("default")
+  sortOrder Int          @default(0)
+  ownerId   String
+  folderId  String?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  owner     NotesProfile @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  folder    Folder?      @relation(fields: [folderId], references: [id], onDelete: SetNull)
+
+  @@index([ownerId, sortOrder, createdAt])
+  @@index([ownerId, folderId, sortOrder, createdAt])
+  @@index([ownerId, updatedAt])
+}
+
+model NoteTrash {
+  id        String       @id @default(cuid())
+  noteId    String       @unique
+  title     String
+  body      String
+  color     String
+  sortOrder Int
+  ownerId   String
+  folderId  String?
+  createdAt DateTime
+  updatedAt DateTime
+  deletedAt DateTime     @default(now())
+  owner     NotesProfile @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  folder    Folder?      @relation(fields: [folderId], references: [id], onDelete: SetNull)
+
+  @@index([ownerId, deletedAt, id])
+}

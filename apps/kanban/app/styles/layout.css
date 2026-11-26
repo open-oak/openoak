@@ -1,0 +1,202 @@
+.kanban-shell {
+  position: relative;
+  top: var(--kanban-viewport-offset-top, 0px);
+  height: var(--kanban-viewport-height, 100dvh);
+  min-height: 0;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.app-frame {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.persistent-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100dvh;
+  z-index: -2;
+  background-color: var(--background);
+  transition: background 220ms ease;
+}
+
+.persistent-background[data-theme] {
+  background-color: var(--theme-base);
+  background-image:
+    radial-gradient(128% 98% at 4% 2%, color-mix(in oklab, var(--theme-glow-a) 72%, white), transparent 55%),
+    radial-gradient(108% 88% at 98% 6%, color-mix(in oklab, var(--theme-glow-b) 62%, white), transparent 57%),
+    radial-gradient(118% 94% at 52% 106%, color-mix(in oklab, var(--theme-glow-c) 46%, white), transparent 60%),
+    linear-gradient(146deg, var(--theme-ribbon-1), var(--theme-ribbon-2) 50%, var(--theme-ribbon-3));
+}
+
+:root.dark .persistent-background[data-theme] {
+  background-image:
+    radial-gradient(130% 96% at 6% 4%, color-mix(in oklab, var(--theme-glow-a) 52%, var(--theme-base)), transparent 56%),
+    radial-gradient(112% 88% at 96% 6%, color-mix(in oklab, var(--theme-glow-b) 46%, var(--theme-base)), transparent 58%),
+    radial-gradient(120% 92% at 52% 110%, color-mix(in oklab, var(--theme-glow-c) 44%, var(--theme-base)), transparent 62%),
+    linear-gradient(146deg, var(--theme-ribbon-1), var(--theme-ribbon-2) 52%, var(--theme-ribbon-3));
+}
+
+.persistent-background[data-theme="blue"] {
+  --theme-base: #bbdcff;
+  --theme-glow-a: #69b8ff;
+  --theme-glow-b: #3d93f9;
+  --theme-glow-c: #a2e0ff;
+  --theme-ribbon-1: #eff8ff;
+  --theme-ribbon-2: #cee6ff;
+  --theme-ribbon-3: #a8d0ff;
+}
+
+:root.dark .persistent-background[data-theme="blue"] {
+  --theme-base: #27405f;
+  --theme-glow-a: #4d94f0;
+  --theme-glow-b: #2f6fcd;
+  --theme-glow-c: #72b8ff;
+  --theme-ribbon-1: #2e4a70;
+  --theme-ribbon-2: #27405f;
+  --theme-ribbon-3: #213751;
+}
+
+.persistent-background[data-theme="purple"] {
+  --theme-base: #d9c0ff;
+  --theme-glow-a: #c48eff;
+  --theme-glow-b: #8a5aec;
+  --theme-glow-c: #e0b4ff;
+  --theme-ribbon-1: #f8ecff;
+  --theme-ribbon-2: #e4cbff;
+  --theme-ribbon-3: #c79eff;
+}
+
+:root.dark .persistent-background[data-theme="purple"] {
+  --theme-base: #403265;
+  --theme-glow-a: #8d6be3;
+  --theme-glow-b: #6f4fc4;
+  --theme-glow-c: #b78cff;
+  --theme-ribbon-1: #47376f;
+  --theme-ribbon-2: #3e3162;
+  --theme-ribbon-3: #352955;
+}
+
+.persistent-background[data-theme="green"] {
+  --theme-base: #c1efcd;
+  --theme-glow-a: #80e0a4;
+  --theme-glow-b: #48b97a;
+  --theme-glow-c: #c8f4d6;
+  --theme-ribbon-1: #ecfff2;
+  --theme-ribbon-2: #d2f2dc;
+  --theme-ribbon-3: #ade7c0;
+}
+
+:root.dark .persistent-background[data-theme="green"] {
+  --theme-base: #2f4b3a;
+  --theme-glow-a: #56bd83;
+  --theme-glow-b: #3a9562;
+  --theme-glow-c: #86d9a8;
+  --theme-ribbon-1: #355541;
+  --theme-ribbon-2: #2d4838;
+  --theme-ribbon-3: #284233;
+}
+
+.persistent-background[data-theme="coral"] {
+  --theme-base: #ffc8b4;
+  --theme-glow-a: #ff9b78;
+  --theme-glow-b: #ff6f5c;
+  --theme-glow-c: #ffd0b8;
+  --theme-ribbon-1: #fff1e8;
+  --theme-ribbon-2: #ffd6c4;
+  --theme-ribbon-3: #ffb097;
+}
+
+:root.dark .persistent-background[data-theme="coral"] {
+  --theme-base: #55373c;
+  --theme-glow-a: #d86f62;
+  --theme-glow-b: #b45449;
+  --theme-glow-c: #ff9c86;
+  --theme-ribbon-1: #5f3d43;
+  --theme-ribbon-2: #53353a;
+  --theme-ribbon-3: #492f34;
+}
+
+.persistent-background[data-theme="gold"] {
+  --theme-base: #f7dd98;
+  --theme-glow-a: #ffcf5d;
+  --theme-glow-b: #d3a337;
+  --theme-glow-c: #ffe8af;
+  --theme-ribbon-1: #fff6d5;
+  --theme-ribbon-2: #f9e2a1;
+  --theme-ribbon-3: #f0c975;
+}
+
+:root.dark .persistent-background[data-theme="gold"] {
+  --theme-base: #52422a;
+  --theme-glow-a: #d6ab49;
+  --theme-glow-b: #ad812d;
+  --theme-glow-c: #f0c567;
+  --theme-ribbon-1: #5c4a2d;
+  --theme-ribbon-2: #503f29;
+  --theme-ribbon-3: #473924;
+}
+
+.wallpaper-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-position: center;
+  background-size: cover;
+}
+
+.wallpaper-layer-transition {
+  transition: opacity 220ms ease;
+  will-change: opacity;
+}
+
+.sidebar-surface,
+.mobile-topbar,
+.board-title,
+.column-panel,
+.add-list-panel,
+.settings-panel,
+.task-detail-panel {
+  border: 1px solid var(--border);
+  background: var(--card);
+  box-shadow: 0 20px 55px hsl(var(--shadow-color) / 0.16);
+}
+
+.sidebar-surface {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+  border: 0;
+  border-radius: inherit;
+  background: var(--sidebar-surface);
+  box-shadow:
+    0 1px 3px 0 rgb(0 0 0 / 0.1),
+    0 1px 2px -1px rgb(0 0 0 / 0.1),
+    0 0 0 1px var(--sidebar-border);
+}
+
+.no-glass .sidebar-surface,
+.no-glass .mobile-topbar,
+.no-glass .board-title,
+.no-glass .column-panel,
+.no-glass .add-list-panel,
+.no-glass .settings-panel,
+.no-glass .task-detail-panel,
+.solid-surface {
+  background: var(--solid-card);
+}
+
+.no-glass .sidebar-surface,
+.app-sidebar.solid-surface .sidebar-surface {
+  background: var(--sidebar-solid);
+}

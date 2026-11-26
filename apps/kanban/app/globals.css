@@ -1,0 +1,73 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "tw-animate-css";
+@import "./styles/shadcn-variants.css";
+
+/*
+ * Feature stylesheets, imported in their original cascade order. Later files
+ * can rely on earlier ones losing specificity ties, so keep this order when
+ * adding a file: tokens, then structure, then features, then media queries.
+ */
+@import "./styles/theme.css";
+@import "./styles/base.css";
+@import "./styles/layout.css";
+@import "./styles/sidebar.css";
+@import "./styles/workspace.css";
+@import "./styles/board.css";
+@import "./styles/tasks.css";
+@import "./styles/dialogs.css";
+@import "./styles/settings.css";
+@import "./styles/motion.css";
+@import "./styles/responsive.css";
+
+/* Archive stays beside the board; mobile uses the full available viewport. */
+.kanban-archive-panel {
+  inset: 0 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 350px);
+  max-width: none;
+  height: 100dvh;
+  max-height: 100dvh;
+  padding: 0;
+  gap: 0;
+  border-radius: 0;
+  transform: none;
+  translate: none;
+  background: var(--solid-card);
+  border-left: 1px solid var(--border);
+}
+.archive-is-open { padding-right: 350px; }
+.archive-card.task-card { width: 100%; text-align: left; cursor: pointer; touch-action: auto; box-shadow: 0 1px 3px hsl(var(--shadow-color) / 0.08); border-radius: 0.7rem; }
+.archive-card.task-card:active { cursor: pointer; }
+.archive-card.task-card:hover { border-color: var(--muted-foreground); }
+.archive-card-title { overflow-wrap: anywhere; }
+.archive-card-actions { display: flex; gap: 0.25rem; padding-top: 0.15rem; }
+.archive-card-actions button { min-height: 32px; padding: 0.35rem 0.5rem; color: var(--muted-foreground); font-size: 0.8125rem; border-radius: 0.35rem; }
+.archive-card-actions button:hover { color: var(--foreground); background: var(--muted); }
+.archive-card-actions button:disabled { opacity: 0.5; }
+@media (max-width: 900px) {
+  .archive-is-open { padding-right: 0; }
+  .kanban-archive-panel { width: 100%; border-left: 0; }
+  .archive-card-actions button { min-height: 44px; }
+}
+.action-notice {
+  position: fixed;
+  z-index: 60;
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  width: max-content;
+  max-width: calc(100vw - 2rem);
+  padding: .65rem .85rem;
+  border: 1px solid var(--border);
+  border-radius: .75rem;
+  background: var(--solid-card);
+  box-shadow: 0 4px 18px #0002;
+  font-size: .875rem;
+}
+.action-notice > span { min-width: 0; }
+.action-notice button { flex-shrink: 0; }

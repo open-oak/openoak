@@ -1,0 +1,76 @@
+.page {
+  --text: #f2efe4;
+  --muted: #b7b1a2;
+  --green: #a8cfa2;
+  --line: rgba(237, 226, 202, .18);
+  color-scheme: dark;
+  min-height: 100dvh;
+  isolation: isolate;
+  color: var(--text);
+  background: #11130f;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.55;
+}
+.page::before { content: ""; position: fixed; inset: 0; z-index: -1; background: linear-gradient(120deg, rgba(17,19,15,.9), rgba(17,19,15,.66) 45%, rgba(32,23,15,.42)), url("/assets/openoak_bg.webp") center / cover no-repeat; }
+.page a { color: var(--green); text-decoration: underline; text-underline-offset: .2em; }
+.page a:hover { color: var(--text); }
+.page :where(a, button, summary):focus-visible { outline: 3px solid var(--text); outline-offset: 4px; }
+.header, .main, .footer { width: min(calc(100% - 40px), 760px); margin-inline: auto; }
+.header { display: flex; min-height: 88px; align-items: center; justify-content: space-between; }
+.header .brand { color: var(--text); font-size: 1.65rem; font-weight: 850; text-decoration: none; letter-spacing: -.04em; }
+.main { padding: clamp(30px, 6vw, 56px) 0 56px; }
+.eyebrow { margin: 0 0 12px; color: var(--green); font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.main h1 { margin: 0 0 18px; font-size: clamp(2.7rem, 9vw, 4.25rem); letter-spacing: -.05em; line-height: 1.05; font-weight: 700; }
+.intro { margin: 0 0 24px; max-width: 600px; color: var(--muted); font-size: 1.05rem; }
+.main .primary { display: inline-flex; align-items: center; gap: 14px; min-height: 44px; padding: 10px 20px; border-radius: 999px; background: var(--green); color: #11130f; text-decoration: none; font-size: .9rem; font-weight: 700; }
+.tabs { display: grid; width: min(100%, 380px); grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; border: 1px solid var(--line); border-radius: 999px; margin: 0 0 28px; background: rgba(17,19,15,.28); padding: 4px; }
+.tabs button { min-width: 0; min-height: 44px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); cursor: pointer; font: inherit; font-size: .88rem; font-weight: 700; padding: 9px 12px; }
+.tabs button[aria-selected="true"] { background: rgba(242,239,228,.15); color: var(--text); }
+.tabs button:hover { color: var(--text); }
+.connections { display: grid; gap: 16px; }
+.connection, .empty { border: 1px solid var(--line); border-radius: 20px; background: rgba(17,19,15,.86); padding: clamp(20px, 4vw, 30px); }
+.connectionHeader { display: flex; justify-content: space-between; align-items: start; gap: 16px; }
+.main h2 { margin: 0; font-size: 1.15rem; font-weight: 600; overflow-wrap: anywhere; }
+.connectionHeader h2 { padding-top: 7px; }
+.connectionDate { margin: 4px 0 0; color: var(--muted); font-size: .8rem; }
+.disconnect { min-height: 44px; border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px; color: var(--text); font: inherit; font-size: .85rem; cursor: pointer; }
+.disconnect:hover { background: rgba(255,255,255,.08); }
+.disconnect:disabled { opacity: .6; cursor: wait; }
+.accessLabel { margin-top: 14px; color: var(--muted); font-size: .8rem; }
+.permissions { margin: 8px 0 18px; padding-left: 20px; color: var(--text); font-size: .9rem; list-style: disc; overflow-wrap: anywhere; }
+.permissions li + li { margin-top: 5px; }
+.connection details { border-top: 1px solid var(--line); }
+.connection summary { cursor: pointer; padding: 12px 0 0; color: var(--muted); font-size: .85rem; }
+.connection summary:hover { color: var(--green); }
+.connection dl { font-size: .8rem; margin-top: 12px; }
+.connection dt { margin-top: 12px; color: var(--muted); }
+.connection dd { overflow-wrap: anywhere; }
+.empty p, .footnote { margin: 12px 0 0; color: var(--muted); font-size: .9rem; }
+.empty .primary { margin-top: 20px; }
+.footnote { margin-top: 22px; }
+.error { color: #f3b5a7; font-size: .8rem; max-width: 240px; margin-top: 10px; }
+.footer { display: flex; justify-content: space-between; gap: 24px; border-top: 1px solid var(--line); padding: 24px 0 32px; color: var(--muted); font-size: .85rem; }
+.setup { border: 1px solid var(--line); border-radius: 20px; background: rgba(17,19,15,.86); padding: clamp(20px, 4vw, 30px); }
+.setup h2 { margin-bottom: 8px; }
+.setup h3 { font-size: .85rem; color: var(--muted); font-weight: 500; margin-bottom: 8px; }
+.muted, .guide { color: var(--muted); font-size: .9rem; }
+.muted { margin: 0 0 16px; }
+.copyRow { display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 1px solid var(--line); border-radius: 12px; background: rgba(0,0,0,.2); padding: 12px; }
+.setup code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; overflow-wrap: anywhere; color: var(--text); font-size: .9em; }
+.setup pre { white-space: pre-wrap; margin: 12px 0; padding: 12px; background: rgba(0,0,0,.2); border-radius: 8px; }
+.copyButton { min-height: 44px; flex: 0 0 auto; border: 0; border-radius: 999px; background: var(--green); color: #11130f; padding: 0 16px; font: inherit; font-size: .85rem; font-weight: 700; cursor: pointer; }
+.copyButton:disabled { opacity: .7; }
+.accessNote { margin: 12px 0 24px; color: var(--muted); font-size: .8rem; }
+.setup details { border-bottom: 1px solid var(--line); }
+.setup summary { cursor: pointer; padding: 12px 4px; font-weight: 600; }
+.setup summary:hover { color: var(--green); }
+.guide { padding: 0 4px 16px; }
+.guide p { margin: 0 0 12px; }
+.setup .check { margin-top: 16px; border: 0; }
+.check summary { font-weight: 500; color: var(--green); }
+@media (max-width: 480px) {
+  .page::before { background-image: linear-gradient(120deg, rgba(17,19,15,.9), rgba(17,19,15,.66) 45%, rgba(32,23,15,.42)), url("/assets/openoak_bg-mobile.webp"); }
+  .connectionHeader { flex-direction: column; gap: 12px; }
+  .copyRow { align-items: stretch; flex-direction: column; }
+  .copyButton { width: 100%; }
+}

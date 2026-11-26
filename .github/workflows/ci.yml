@@ -1,0 +1,122 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/openoak_ci
+  ACCOUNT_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/openoak_account_ci
+  KANBAN_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/openoak_kanban_ci
+  BETTER_AUTH_SECRET: openoak-ci-only-secret-with-at-least-32-characters
+  BETTER_AUTH_URL: http://localhost:3000
+  NEXT_PUBLIC_ACCOUNT_URL: http://localhost:3000
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+      - run: npm run generate
+      - run: npx playwright install --with-deps chromium
+      - run: npm test
+      - name: MCP 2025-11-25 conformance
+        run: npm --workspace @openoak/mcp run test:conformance
+      - name: MCP 2026-07-28 conformance (alpha)
+        continue-on-error: true
+        run: npm --workspace @openoak/mcp run test:conformance:next
+      - run: npm run test:a11y
+      - run: npm run typecheck
+      - run: npm run check:sites
+      - run: npm run check:security
+      - run: npm run lint
+      - run: npm run build
+      - run: npm run test:pwa:apps
+      - run: npm audit --audit-level=high
+
+  migrations:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: openoak_ci
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d openoak_ci"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+      - name: Replay Account migrations
+        run: npm run migrate:deploy --workspace=@openoak/account && npm run migrate:deploy --workspace=@openoak/account
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/openoak_ci?schema=auth
+          DIRECT_URL: postgresql://postgres:postgres@localhost:5432/openoak_ci?schema=auth
+      - name: Replay Todo migrations
+        run: npm run migrate:deploy --workspace=@openoak/todo && npm run migrate:deploy --workspace=@openoak/todo
+        env:
+          TODO_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/openoak_ci?schema=todo
+          TODO_DIRECT_URL: postgresql://postgres:postgres@localhost:5432/openoak_ci?schema=todo
+      - name: Verify AI connection setup and management
+        run: |
+          npx playwright install --with-deps chromium
+          npm run build --workspace=@openoak/account -- --webpack
+          node apps/account/tests/integration/connected-ai-ui.test.mjs
+        env:
+          ACCOUNT_TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/openoak_ci
+          ACCOUNT_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/openoak_ci
+          BETTER_AUTH_URL: http://localhost:3428
+      - name: Replay Kanban migrations
+        run: npm run migrate:deploy --workspace=@openoak/kanban && npm run migrate:deploy --workspace=@openoak/kanban
+        env:
+          KANBAN_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/openoak_ci?schema=kanban
+          KANBAN_DIRECT_URL: postgresql://postgres:postgres@localhost:5432/openoak_ci?schema=kanban
+      - name: Verify Kanban modular backfill and recovery
+        run: npm run test:migration --workspace=@openoak/kanban && npm run test:operations --workspace=@openoak/kanban
+        env:
+          KANBAN_TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/openoak_ci
+      - name: Verify modular Kanban MCP transport
+        run: npm run generate && npm run test:kanban --workspace=@openoak/mcp
+        env:
+          KANBAN_TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/openoak_ci
+      - name: Verify Kanban browser sync controller
+        run: npm run test:browser-sync --workspace=@openoak/kanban && npm run test:sharing --workspace=@openoak/kanban
+        env:
+          KANBAN_TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/openoak_ci
+      - name: Verify desktop and mobile offline behavior
+        run: |
+          npx playwright install --with-deps chromium
+          npm run build --workspace=@openoak/kanban -- --webpack
+          node apps/kanban/tests/integration/kanban-ui.test.mjs
+          npm run test:sharing-ui --workspace=@openoak/kanban
+        env:
+          KANBAN_TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/openoak_ci
+      - name: Replay Outline migrations
+        run: npm run migrate:deploy --workspace=@openoak/outline && npm run migrate:deploy --workspace=@openoak/outline
+        env:
+          OUTLINE_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/openoak_ci?schema=outline
+          OUTLINE_DIRECT_URL: postgresql://postgres:postgres@localhost:5432/openoak_ci?schema=outline
+      - name: Verify recovery and complete account deletion
+        run: npm run generate && npm run test:recovery
+        env:
+          SUITE_TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/openoak_ci

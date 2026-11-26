@@ -1,0 +1,85 @@
+/* Microsoft To Do alternative page. Sits on the OpenTodo wallpaper, header and footer. */
+.mt-shell { width: min(100% - 36px, 960px); margin: 0 auto; padding: 120px 0 72px; position: relative; z-index: 1; }
+.mt-shell a:not(.btn) { text-decoration: underline; text-underline-offset: 3px; }
+.mt-hero h1 { font-size: clamp(2.4rem, 7vw, 4.75rem); line-height: 1.04; letter-spacing: -.045em; margin: 0 0 28px; max-width: 17ch; }
+.mt-hero .btn { padding: 14px 22px; }
+.mt-hero-actions { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+.mt-hero-actions small { color: rgba(246, 243, 238, .82); font-size: .95rem; }
+
+/* Timeline */
+.mt-timeline { list-style: none; margin: 44px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); position: relative; }
+.mt-timeline::before { content: ""; position: absolute; left: 8px; right: 8px; top: 7px; height: 2px; background: rgba(255, 255, 255, .45); }
+.mt-timeline li { position: relative; padding: 28px 12px 0 0; }
+.mt-timeline li::before { content: ""; position: absolute; top: 0; left: 0; width: 16px; height: 16px; border-radius: 50%; background: #f6f3ee; box-shadow: 0 0 0 4px rgba(0, 0, 0, .25); }
+.mt-timeline li.is-now::before { background: var(--cta, #fff); box-shadow: 0 0 0 4px rgba(255, 255, 255, .35); }
+.mt-timeline li.is-end::before { background: #f97066; }
+.mt-timeline strong { display: block; font-size: 1.05rem; }
+.mt-timeline span { color: rgba(246, 243, 238, .82); font-size: .95rem; }
+
+/* Panels */
+.mt-panel { background: var(--surface-strong); color: var(--ink); border-radius: 16px; padding: clamp(22px, 4vw, 44px); margin-top: 28px; box-shadow: var(--shadow-md); }
+.mt-panel h2 { font-size: clamp(1.6rem, 4vw, 2.3rem); line-height: 1.15; letter-spacing: -.03em; margin: 0 0 12px; }
+.mt-panel > p:first-of-type { color: var(--ink-soft); margin-top: 0; }
+.mt-lead { font-size: 1.1rem; max-width: 46rem; }
+
+/* Familiar: screenshot + matching names */
+.mt-familiar { display: grid; grid-template-columns: 1.6fr 1fr; gap: 28px; align-items: center; margin-top: 24px; }
+.mt-familiar img { width: 100%; height: auto; border-radius: 12px; box-shadow: var(--shadow-md); display: block; }
+.mt-names { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.mt-names li { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px; background: var(--accent-soft); font-weight: 500; }
+.mt-names li span { margin-left: auto; font-size: .8rem; font-weight: 500; color: var(--accent-strong); }
+.mt-names-caption { font-size: .9rem; color: var(--ink-soft); margin: 4px 0 0; }
+
+/* Steps */
+.mt-steps { list-style: none; margin: 24px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; counter-reset: step; }
+.mt-steps li { background: #fff; border: 1px solid rgba(17, 35, 33, .08); border-radius: 14px; padding: 20px; counter-increment: step; }
+.mt-steps li::before { content: counter(step); display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 700; font-size: .9rem; margin-bottom: 14px; }
+.mt-steps svg { float: right; color: var(--accent); }
+.mt-steps strong { display: block; font-size: 1.1rem; margin-bottom: 4px; }
+.mt-steps p { margin: 0; color: var(--ink-soft); font-size: .95rem; }
+
+/* Routes */
+.mt-routes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
+.mt-route { border: 1px solid rgba(17, 35, 33, .12); border-radius: 14px; padding: 20px; }
+.mt-route h3 { margin: 0 0 4px; font-size: 1.15rem; }
+.mt-route .mt-tag { display: inline-block; font-size: .78rem; font-weight: 700; letter-spacing: .02em; padding: 3px 9px; border-radius: 99px; background: var(--accent-soft); color: var(--accent-strong); margin-bottom: 10px; }
+.mt-route p { margin: 0 0 12px; }
+.mt-route pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; padding: 14px 16px; border-radius: 10px; background: #e3ebe8; font-size: .86rem; line-height: 1.55; }
+.mt-route details { margin-top: 8px; }
+.mt-route summary { cursor: pointer; font-weight: 700; color: var(--accent-strong); }
+.mt-route ol { padding-left: 20px; margin: 12px 0 0; font-size: .95rem; }
+.mt-route li { margin-bottom: 8px; }
+.mt-route code { font-size: .85em; }
+.mt-safe { margin: 16px 0 0; font-size: .95rem; color: var(--ink-soft); }
+
+/* What moves over */
+.mt-chips { list-style: none; margin: 18px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.mt-chips li { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 99px; background: #fff; border: 1px solid rgba(17, 35, 33, .1); font-weight: 500; }
+.mt-chips svg { color: var(--accent); flex: none; }
+.mt-chips--notes li { background: #f3efe4; }
+.mt-chips--notes svg { color: #9a6b12; }
+.mt-subhead { margin: 24px 0 2px; font-weight: 700; }
+.mt-wip { margin: 22px 0 0; padding: 14px 16px; border-radius: 10px; background: var(--accent-soft); }
+
+/* Trust strip */
+.mt-trust { list-style: none; margin: 28px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.mt-trust li { background: rgba(251, 249, 244, .14); border: 1px solid var(--surface-line); border-radius: 14px; padding: 16px; backdrop-filter: blur(10px); }
+.mt-trust strong { display: block; font-size: 1.05rem; }
+.mt-trust span { font-size: .9rem; color: rgba(246, 243, 238, .85); }
+
+/* FAQ */
+.mt-faq details { border-bottom: 1px solid rgba(17, 35, 33, .14); padding: 16px 0; }
+.mt-faq summary { font-weight: 700; cursor: pointer; }
+.mt-faq details p { margin: 10px 0 0; color: var(--ink-soft); }
+
+.mt-end { text-align: center; padding: 56px 0 8px; }
+.mt-end h2 { font-size: clamp(1.8rem, 5vw, 2.8rem); letter-spacing: -.03em; margin: 0 0 20px; }
+.mt-end .btn { padding: 14px 22px; }
+
+@media (max-width: 760px) {
+  .mt-familiar, .mt-routes, .mt-steps { grid-template-columns: 1fr; }
+  .mt-trust { grid-template-columns: 1fr 1fr; }
+  .mt-timeline { grid-template-columns: 1fr; gap: 18px; }
+  .mt-timeline::before { left: 7px; right: auto; top: 8px; bottom: 8px; width: 2px; height: auto; }
+  .mt-timeline li { padding: 0 0 0 30px; }
+}

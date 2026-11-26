@@ -1,0 +1,8 @@
+.next
+.vercel
+node_modules
+.env
+.env*.local
+generated
+tsconfig.tsbuildinfo
+openkanban-backup-*.json

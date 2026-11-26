@@ -1,0 +1,84 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "outputDirectory": ".",
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'sha256-26sZP52xCByN/OPbyo47DcrTS1p8Q7ccHcx7pOcfRyQ=' 'sha256-9qw90v5zAz4JGJ0cMPVAkJL9xa+b+9xaYW8iYmrSuyw=' 'sha256-z9o8p8iK43pchMsHC4g86lN7vOQIRC1GheXCE3H9s+U=' 'sha256-3O1locpjMt33mkhkviBSSAqf7k8wBniQgr7GlTvh9Go='; script-src-attr 'none'; style-src-elem 'self' https://fonts.googleapis.com; style-src-attr 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self' https://account.openoak.org; frame-ancestors 'none'; upgrade-insecure-requests" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" }
+      ]
+    },
+    {
+      "source": "/assets/:path*",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }
+      ]
+    },
+    {
+      "source": "/todo/public/:path*",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }
+      ]
+    },
+    {
+      "source": "/outline/public/:path*",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }
+      ]
+    },
+    {
+      "source": "/kanban/public/:path*",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }
+      ]
+    },
+    {
+      "source": "/:file(styles.css|main.js)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=3600, stale-while-revalidate=86400" }
+      ]
+    },
+    {
+      "source": "/:app(todo|outline|kanban)/:file(style.css|main.js)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=3600, stale-while-revalidate=86400" }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/mcp",
+      "destination": "/api/mcp-redirect"
+    },
+    {
+      "source": "/mcp/",
+      "destination": "/api/mcp-redirect"
+    },
+    {
+      "source": "/mcp/index.html",
+      "destination": "/api/mcp-redirect"
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "app.openoak.org" }],
+      "destination": "/api/app-redirect"
+    },
+    {
+      "source": "/notes",
+      "destination": "/api/notes-redirect"
+    },
+    {
+      "source": "/notes/",
+      "destination": "/api/notes-redirect"
+    },
+    {
+      "source": "/notes/:path*",
+      "destination": "/api/notes-redirect?redirectPath=:path*"
+    }
+  ]
+}
